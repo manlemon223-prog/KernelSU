@@ -17,11 +17,14 @@ jobs:
 
       - name: Patch UI for Magica Exploit
         run: |
-          # Use sed for surgical UI patches to force the exploit triggers
-          # Note: Paths based on standard KernelSU structure
+          # Force 'Jailbreak' button visibility and enablement
           find app/src/main/java -name "HomeMaterial.kt" -exec sed -i 's/if (KSUD_INSTALLED)/if (true)/g' {} +
           find app/src/main/java -name "HomeViewModel.kt" -exec sed -i 's/val isGki = .*/val isGki = true/g' {} +
           find app/src/main/java -name "InstallScreen.kt" -exec sed -i 's/if (isGki)/if (true)/g' {} +
+          
+          # Force 'Next' button enablement in Install screen
+          find app/src/main/java -name "InstallMaterial.kt" -exec sed -i 's/enabled = uiState.installMethod != null/enabled = true/g' {} +
+          find app/src/main/java -name "InstallMiuix.kt" -exec sed -i 's/enabled = uiState.installMethod != null/enabled = true/g' {} +
 
       - name: Setup Java
         uses: actions/setup-java@v5
