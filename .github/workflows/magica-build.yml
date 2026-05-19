@@ -1,0 +1,41 @@
+name: Build Magica Manager
+on:
+  workflow_dispatch:
+
+jobs:
+  build-manager:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Patch UI for Magica Exploit
+        run: |
+          # Use sed for surgical UI patches to force the exploit triggers
+          # Note: Paths based on standard KernelSU structure
+          find manager/app/src/main/java -name "HomeMaterial.kt" -exec sed -i 's/if (KSUD_INSTALLED)/if (true)/g' {} +
+          find manager/app/src/main/java -name "HomeViewModel.kt" -exec sed -i 's/val isGki = .*/val isGki = true/g' {} +
+          find manager/app/src/main/java -name "InstallScreen.kt" -exec sed -i 's/if (isGki)/if (true)/g' {} +
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Build with Gradle
+        run: ./gradlew :manager:app:assembleDebug
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: Magica-KernelSU-Manager
+          path: manager/app/build/outputs/apk/debug/*.apk
