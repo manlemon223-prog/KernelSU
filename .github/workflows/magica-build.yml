@@ -5,6 +5,10 @@ on:
 jobs:
   build-manager:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./manager
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -15,9 +19,9 @@ jobs:
         run: |
           # Use sed for surgical UI patches to force the exploit triggers
           # Note: Paths based on standard KernelSU structure
-          find manager/app/src/main/java -name "HomeMaterial.kt" -exec sed -i 's/if (KSUD_INSTALLED)/if (true)/g' {} +
-          find manager/app/src/main/java -name "HomeViewModel.kt" -exec sed -i 's/val isGki = .*/val isGki = true/g' {} +
-          find manager/app/src/main/java -name "InstallScreen.kt" -exec sed -i 's/if (isGki)/if (true)/g' {} +
+          find app/src/main/java -name "HomeMaterial.kt" -exec sed -i 's/if (KSUD_INSTALLED)/if (true)/g' {} +
+          find app/src/main/java -name "HomeViewModel.kt" -exec sed -i 's/val isGki = .*/val isGki = true/g' {} +
+          find app/src/main/java -name "InstallScreen.kt" -exec sed -i 's/if (isGki)/if (true)/g' {} +
 
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -32,7 +36,7 @@ jobs:
         uses: android-actions/setup-android@v4
 
       - name: Build with Gradle
-        run: ./gradlew :manager:app:assembleDebug
+        run: ./gradlew :app:assembleDebug
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v7
