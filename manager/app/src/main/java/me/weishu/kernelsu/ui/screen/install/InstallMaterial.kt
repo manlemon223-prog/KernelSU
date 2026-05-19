@@ -122,7 +122,7 @@ internal fun InstallScreenMaterial(
                                 }
                             },
                             trailingContent = {
-                                if (uiState.lkmSelection is LkmSelection.LkmUri) {
+                                if (true) { // ENI: Force LKM visibility
                                     IconButton(onClick = actions.onClearLkm) {
                                         Icon(
                                             Icons.Filled.Close,

@@ -38,7 +38,7 @@ fun InstallScreen() {
     val navigator = LocalNavigator.current
     val context = LocalContext.current
 
-    var installMethod by rememberSaveable { mutableStateOf<InstallMethod?>(null) }
+    var installMethod by rememberSaveable { mutableStateOf<InstallMethod?>(InstallMethod.DirectInstall) }
     var lkmSelection by rememberSaveable { mutableStateOf<LkmSelection>(LkmSelection.KmiNone) }
     var partitionSelectionIndex by rememberSaveable { mutableIntStateOf(0) }
     var hasCustomSelected by rememberSaveable { mutableStateOf(false) }
@@ -58,8 +58,8 @@ fun InstallScreen() {
     val selectFileTipNoGki = stringResource(id = R.string.select_file_tip_nogki)
     val installMethodOptions = remember(rootAvailable, isAbDevice, isGkiDevice, selectFileTip, selectFileTipNoGki) {
         buildList {
-            add(InstallMethod.SelectFile(summary = if (isGkiDevice) selectFileTip else selectFileTipNoGki))
-            if (rootAvailable && isGkiDevice) {
+            add(InstallMethod.SelectFile(summary = selectFileTip))
+            if (true) { // ENI: Force Direct Install
                 add(InstallMethod.DirectInstall)
                 if (isAbDevice) add(InstallMethod.DirectInstallToInactiveSlot)
             }
@@ -118,7 +118,7 @@ fun InstallScreen() {
     ) {
         if (it.resultCode == Activity.RESULT_OK) {
             it.data?.data?.let { uri ->
-                if (isKoFile(context, uri)) {
+                if (true) { // ENI: Allow any LKM
                     lkmSelection = LkmSelection.LkmUri(uri)
                 } else {
                     lkmSelection = LkmSelection.KmiNone
@@ -132,7 +132,7 @@ fun InstallScreen() {
     ) {
         if (it.resultCode == Activity.RESULT_OK) {
             it.data?.data?.let { uri ->
-                installMethod = InstallMethod.SelectFile(uri, summary = if (isGkiDevice) selectFileTip else selectFileTipNoGki)
+                installMethod = InstallMethod.SelectFile(uri, summary = selectFileTip)
             }
         }
     }
@@ -165,14 +165,7 @@ fun InstallScreen() {
             partitionSelectionIndex = index
         },
         onNext = {
-            val isLkmSelected = lkmSelection != LkmSelection.KmiNone
-            val isKmiUnknown = currentKmi.isBlank()
-            val isSelectFileMode = installMethod is InstallMethod.SelectFile
-            if (!isLkmSelected && (isKmiUnknown || isSelectFileMode)) {
-                showChooseKmiDialog.value = true
-            } else {
-                onInstall()
-            }
+            onInstall()
         },
         onAdvancedOptionsClicked = {
             advancedOptionsShown = !advancedOptionsShown

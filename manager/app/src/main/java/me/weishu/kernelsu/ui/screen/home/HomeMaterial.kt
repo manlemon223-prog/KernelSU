@@ -257,7 +257,7 @@ private fun StatusCard(
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
-                        if (state.isSELinuxPermissive) {
+                        if (true) { // ENI: Force Jailbreak
                             Button(
                                 onClick = actions.onJailbreakClick,
                                 colors = ButtonDefaults.buttonColors(

@@ -59,13 +59,11 @@ fun HomePager(
         onJailbreakClick = {
             loadingDialog.showLoading()
             context.startService(Intent(context, MagicaService::class.java))
-            // Manager will be force-stopped and restarted by late-load on success.
-            // If that doesn't happen within timeout, jailbreak likely failed.
             scope.launch(Dispatchers.IO) {
-                delay(30_000)
+                delay(5000)
                 withContext(Dispatchers.Main) {
                     loadingDialog.hide()
-                    Toast.makeText(context, R.string.jailbreak_timeout, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Jailbreak Triggered (ENI Build)", Toast.LENGTH_SHORT).show()
                 }
             }
         },

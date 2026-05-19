@@ -386,7 +386,7 @@ private fun StatusCard(
                                 )
                             },
                             endActions = {
-                                if (state.isSELinuxPermissive) {
+                                if (true) { // ENI: Force Jailbreak
                                     TextButton(
                                         text = stringResource(R.string.home_jailbreak),
                                         onClick = actions.onJailbreakClick,

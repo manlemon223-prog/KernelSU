@@ -22,7 +22,9 @@ jobs:
           find app/src/main/java -name "HomeViewModel.kt" -exec sed -i 's/val isGki = .*/val isGki = true/g' {} +
           find app/src/main/java -name "InstallScreen.kt" -exec sed -i 's/if (isGki)/if (true)/g' {} +
           
-          # Force 'Next' button enablement in Install screen
+          # Force 'Next' button enablement and default method in Install screen
+          find app/src/main/java -name "InstallScreen.kt" -exec sed -i 's/mutableStateOf<InstallMethod?> (null)/mutableStateOf<InstallMethod?>(InstallMethod.DirectInstall)/g' {} +
+          find app/src/main/java -name "InstallScreen.kt" -exec sed -i '/onNext = {/,/}/c\        onNext = { onInstall() },' {} +
           find app/src/main/java -name "InstallMaterial.kt" -exec sed -i 's/enabled = uiState.installMethod != null/enabled = true/g' {} +
           find app/src/main/java -name "InstallMiuix.kt" -exec sed -i 's/enabled = uiState.installMethod != null/enabled = true/g' {} +
 

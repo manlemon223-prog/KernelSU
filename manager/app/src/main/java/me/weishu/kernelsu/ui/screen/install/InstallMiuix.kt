@@ -166,7 +166,7 @@ internal fun InstallScreenMiuix(
                                 )
                             },
                             endActions = {
-                                if (uiState.lkmSelection is LkmSelection.LkmUri) {
+                                if (true) { // ENI: Force LKM visibility
                                     IconButton(onClick = actions.onClearLkm) {
                                         Icon(
                                             MiuixIcons.Close,
