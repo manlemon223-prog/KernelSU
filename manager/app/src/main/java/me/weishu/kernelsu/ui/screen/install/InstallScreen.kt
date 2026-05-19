@@ -48,8 +48,8 @@ fun InstallScreen() {
     var enableAdb by rememberSaveable { mutableStateOf(false) }
 
     val currentKmi by produceState(initialValue = "") { value = getCurrentKmi() }
-    val partitions by produceState(initialValue = emptyList()) { value = getAvailablePartitions() }
-    val defaultPartition by produceState(initialValue = "") { value = getDefaultPartition() }
+    val partitions by produceState(initialValue = listOf("boot")) { value = getAvailablePartitions().ifEmpty { listOf("boot") } }
+    val defaultPartition by produceState(initialValue = "boot") { value = getDefaultPartition().ifEmpty { "boot" } }
     val rootAvailable by produceState(initialValue = false) { value = rootAvailable() }
     val isAbDevice by produceState(initialValue = false) { value = isAbDevice() }
     val isGkiDevice by produceState(initialValue = false) { value = getKernelVersion().isGKI() }
